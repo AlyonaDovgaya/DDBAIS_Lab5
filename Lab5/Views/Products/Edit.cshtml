@@ -1,0 +1,31 @@
+﻿@model Lab5.Models.Product
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h3 class="text-center p-2">
+    <text>Edit product</text>
+</h3>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ProductId" />
+            <div class="form-group">
+                <label asp-for="ProductName" class="control-label"></label>
+                <input asp-for="ProductName" class="form-control" />
+                <span asp-validation-for="ProductName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-route-id="@Model.ProductId" type="submit" value="Edit" class="btn btn-outline-dark col-6" />
+                <a asp-action="Index" class="btn btn-outline-dark col-6 float-right">Back to list</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

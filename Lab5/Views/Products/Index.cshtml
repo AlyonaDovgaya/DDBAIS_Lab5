@@ -1,0 +1,108 @@
+﻿@model Lab5.ViewModels.Product.IndexProductViewModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+var defaultComponent = Model.Products.FirstOrDefault();
+}
+
+<h3 class="text-center p-2">
+    <text>Products</text>
+    <a asp-action="Create" class="btn btn-outline-dark m-3">ADD NEW</a>
+</h3>
+<hr />
+<form method="get" class="form-inline">
+    <label>Product name:</label>
+    <input name="selectedProductName" value="@Model.FilterProductViewModel.SelectedProductName" class="form-control col-2 m-1" />
+    <br />
+    <input type="hidden" name="isFromFilter" value="true" />
+    <input type="submit" value="Filter" class="btn btn-outline-dark col-2 m-1" />
+</form>
+<br />
+<table class="table table-striped w-100">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index"
+                   asp-route-sortOrder="@Model.SortProductViewModel.ProductSort"
+                   asp-route-selectedProductName="@Model.FilterProductViewModel.SelectedProductName">
+                    @Html.DisplayNameFor(model => defaultComponent.ProductName)
+                </a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Products)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td>
+                    <a asp-action="Details"
+                       asp-route-id="@item.ProductId"
+                       class="btn btn-outline-dark w-100 m-1">Details</a>
+                    <a asp-action="Edit"
+                       asp-route-id="@item.ProductId"
+                       class="btn btn-outline-dark w-100 m-1">Edit</a>
+                    <a asp-action="Delete"
+                       asp-route-id="@item.ProductId"
+                       class="btn btn-outline-dark w-100 m-1">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div class="d-flex align-items-center justify-content-center">
+
+    @if (Model.PageViewModel.HasPreviousPage)
+    {
+        <a asp-action="Index"
+           asp-route-page="1"
+           asp-route-sortOrder="@Model.SortProductViewModel.Current"
+           asp-route-selectedProductName="@Model.FilterProductViewModel.SelectedProductName"
+           class="btn btn-outline-dark w-25 m-1">
+            <i class="glyphicon glyphicon-chevron-left">
+                First page
+            </i>
+        </a>
+
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+           asp-route-sortOrder="@Model.SortProductViewModel.Current"
+           asp-route-selectedProductName="@Model.FilterProductViewModel.SelectedProductName"
+           class="btn btn-outline-dark w-25 m-1">
+            <i class="glyphicon glyphicon-chevron-left">
+                Previous page
+            </i>
+        </a>
+    }
+    <a class="btn btn-outline-dark m-1">
+        <i class="glyphicon glyphicon-chevron-left">
+            @Model.PageViewModel.PageNumber
+        </i>
+    </a>
+    @if (Model.PageViewModel.HasNextPage)
+    {
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+           asp-route-sortOrder="@Model.SortProductViewModel.Current"
+           asp-route-selectedProductName="@Model.FilterProductViewModel.SelectedProductName"
+           class="btn btn-outline-dark w-25 m-1">
+            <i class="glyphicon glyphicon-chevron-left">
+                Next page
+            </i>
+        </a>
+
+        <a asp-action="Index"
+           asp-route-page="@Model.PageViewModel.TotalPages"
+           asp-route-sortOrder="@Model.SortProductViewModel.Current"
+           asp-route-selectedProductName="@Model.FilterProductViewModel.SelectedProductName"
+           class="btn btn-outline-dark w-25 m-1">
+            <i class="glyphicon glyphicon-chevron-left">
+                Last page (@Model.PageViewModel.TotalPages)
+            </i>
+        </a>
+    }
+</div>

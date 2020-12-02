@@ -1,0 +1,31 @@
+﻿@model List<Lab5.ViewModels.ViewModels.User.UserRolesViewModel>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h3 class="text-center p-2">
+    <text>Users</text>
+</h3>
+<table class="table table-striped w-100">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Roles</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Email</td>
+                <td>
+                    <select class="form-control" asp-items="new SelectList(user.Roles)"></select>
+                </td>
+                <td>
+                    <a class="btn btn-outline-dark w-100" asp-controller="UserRoles" asp-action="Manage" asp-route-userId="@user.UserId">Manage Roles</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

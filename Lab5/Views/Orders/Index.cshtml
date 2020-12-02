@@ -1,0 +1,190 @@
+﻿@model Lab5.ViewModels.Order.IndexOrderViewModel
+
+@{
+    ViewData["Title"] = "Orders";
+    var defaultComponent = Model.Orders.FirstOrDefault();
+}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Таблица</title>
+</head>
+<body>
+    <h3 class="text-center p-2">
+        <text>Orders</text>
+        @if (User.IsInRole(Lab5.Areas.Identity.Roles.Admin))
+        {
+            <a asp-action="Create" class="btn btn-outline-dark m-3">CREATE NEW</a>
+        }
+    </h3>
+    <hr />
+    <form method="get" class="form-inline">
+        <label>Delivery name:</label>
+        <input name="selectedDelivery" value="@Model.FilterOrderViewModel.SelectedDelivery" class="form-control col-2 m-1" />
+
+        <label>Products:</label>
+        <select name="selectedProductId" asp-items="Model.FilterOrderViewModel.Products" class="form-control col-1 m-1"></select>
+
+        <label>Customers:</label>
+        <select name="selectedCustomerId" asp-items="Model.FilterOrderViewModel.Customers" class="form-control col-1 m-1"></select>
+        <br />
+        <input type="hidden" name="isFromFilter" value="true" />
+        <input type="submit" value="Filter" class="btn btn-outline-dark col-2 m-1" />
+    </form>
+    <br />
+    <table class="table table-striped w-100">
+        <thead>
+            <tr>
+                <th>
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@Model.SortOrderViewModel.DeliverySort"
+                       asp-route-selectedDelivery="@Model.FilterOrderViewModel.SelectedDelivery"
+                       asp-route-selectedProductId="@Model.FilterOrderViewModel.SelectedProductId"
+                       asp-route-selectedCountryId="@Model.FilterOrderViewModel.SelectedCustomerId">
+                        @Html.DisplayNameFor(model => defaultComponent.Delivery)
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@Model.SortOrderViewModel.ProductNameSort"
+                       aasp-route-selectedDelivery="@Model.FilterOrderViewModel.SelectedDelivery"
+                       asp-route-selectedProductId="@Model.FilterOrderViewModel.SelectedProductId"
+                       asp-route-selectedCountryId="@Model.FilterOrderViewModel.SelectedCustomerId">
+                        @Html.DisplayNameFor(model => defaultComponent.Product.ProductName)
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@Model.SortOrderViewModel.CustomerNameSort"
+                       asp-route-selectedDelivery="@Model.FilterOrderViewModel.SelectedDelivery"
+                       asp-route-selectedProductId="@Model.FilterOrderViewModel.SelectedProductId"
+                       asp-route-selectedCountryId="@Model.FilterOrderViewModel.SelectedCustomerId">
+                        @Html.DisplayNameFor(model => defaultComponent.Customer.CustomerName)
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@Model.SortOrderViewModel.OrderDateSort"
+                       asp-route-selectedDelivery="@Model.FilterOrderViewModel.SelectedDelivery"
+                       asp-route-selectedProductId="@Model.FilterOrderViewModel.SelectedProductId"
+                       asp-route-selectedCountryId="@Model.FilterOrderViewModel.SelectedCustomerId">
+                        @Html.DisplayNameFor(model => defaultComponent.OrderDate)
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@Model.SortOrderViewModel.VolumeSort"
+                       asp-route-selectedDelivery="@Model.FilterOrderViewModel.SelectedDelivery"
+                       asp-route-selectedProductId="@Model.FilterOrderViewModel.SelectedProductId"
+                       asp-route-selectedCountryId="@Model.FilterOrderViewModel.SelectedCustomerId">
+                        @Html.DisplayNameFor(model => defaultComponent.Volume)
+                    </a>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Orders)
+            {
+                <tr>
+                    <td>
+                         @Html.DisplayFor(modelItem => item.Delivery)
+                    </td>
+                    <td>
+                        
+                        @Html.DisplayFor(modelItem => item.Product.ProductName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Customer.CustomerName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OrderDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Volume)
+                    </td>
+                    <td>
+                        <div>
+                            <a asp-action="Details"
+                               asp-route-orderId="@item.OrderId"
+                               class="btn btn-outline-dark w-100 m-1">Details</a>
+                            @if (User.IsInRole(Lab5.Areas.Identity.Roles.Admin))
+                            {
+                                <a asp-action="Edit"
+                                   asp-route-orderId="@item.OrderId"
+                                   class="btn btn-outline-dark w-100 m-1">Edit</a>
+                                <a asp-action="Delete"
+                                   asp-route-orderId="@item.OrderId"
+                                   class="btn btn-outline-dark w-100 m-1">Delete</a>
+
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="d-flex align-items-center justify-content-center">
+
+        @if (Model.PageViewModel.HasPreviousPage)
+        {
+            <a asp-action="Index"
+               asp-route-page="1"
+               asp-route-sortOrder="@Model.SortOrderViewModel.Current"
+               asp-route-selectedDelivery="@Model.FilterOrderViewModel.SelectedDelivery"
+               asp-route-selectedProductId="@Model.FilterOrderViewModel.SelectedProductId"
+               asp-route-selectedCustomerId="@Model.FilterOrderViewModel.SelectedCustomerId"
+               class="btn btn-outline-dark w-25 m-1">
+                <i class="glyphicon glyphicon-chevron-left">
+                    First page
+                </i>
+            </a>
+
+            <a asp-action="Index"
+               asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+               asp-route-sortOrder="@Model.SortOrderViewModel.Current"
+               asp-route-selectedDelivery="@Model.FilterOrderViewModel.SelectedDelivery"
+               asp-route-selectedProductId="@Model.FilterOrderViewModel.SelectedProductId"
+               asp-route-selectedCustomerId="@Model.FilterOrderViewModel.SelectedCustomerId"
+               class="btn btn-outline-dark w-25 m-1">
+                <i class="glyphicon glyphicon-chevron-left">
+                    Previous page
+                </i>
+            </a>
+        }
+        <a class="btn btn-outline-dark m-1">
+            <i class="glyphicon glyphicon-chevron-left">
+                @Model.PageViewModel.PageNumber
+            </i>
+        </a>
+        @if (Model.PageViewModel.HasNextPage)
+        {
+            <a asp-action="Index"
+               asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+               asp-route-sortOrder="@Model.SortOrderViewModel.Current"
+               asp-route-selectedDelivery="@Model.FilterOrderViewModel.SelectedDelivery"
+               asp-route-selectedProductId="@Model.FilterOrderViewModel.SelectedProductId"
+               asp-route-selectedCustomerId="@Model.FilterOrderViewModel.SelectedCustomerId"
+               class="btn btn-outline-dark w-25 m-1">
+                <i class="glyphicon glyphicon-chevron-left">
+                    Next page
+                </i>
+            </a>
+
+            <a asp-action="Index"
+               asp-route-page="@Model.PageViewModel.TotalPages"
+               asp-route-sortOrder="@Model.SortOrderViewModel.Current"
+               asp-route-selectedDelivery="@Model.FilterOrderViewModel.SelectedDelivery"
+               asp-route-selectedProductId="@Model.FilterOrderViewModel.SelectedProductId"
+               asp-route-selectedCustomerId="@Model.FilterOrderViewModel.SelectedCustomerId"
+               class="btn btn-outline-dark w-25 m-1">
+                <i class="glyphicon glyphicon-chevron-left">
+                    Last page (@Model.PageViewModel.TotalPages)
+                </i>
+            </a>
+        }
+    </div>
+</body>
+</html>
